@@ -1,0 +1,10 @@
+Joinville: Itajai@89 Florianopolis@180 Blumenau@97 Sao_Jose@174 Chapeco@516 Jaragua_do_Sul@46 Criciuma@350 Brusque@117 Balneario_Camboriu@98
+Itajai: Joinville@89 Florianopolis@94 Blumenau@52 Sao_Jose@90 Chapeco@588 Jaragua_do_Sul@98 Criciuma@266 Brusque@37 Balneario_Camboriu@10
+Florianopolis: Joinville@180 Itajai@94 Blumenau@140 Sao_Jose@11 Chapeco@676 Jaragua_do_Sul@186 Criciuma@191 Brusque@100 Balneario_Camboriu@83
+Blumenau: Joinville@97 Itajai@52 Florianopolis@140 Sao_Jose@83 Chapeco@555 Jaragua_do_Sul@64 Criciuma@316 Brusque@43 Balneario_Camboriu@64
+Sao_Jose: Joinville@174 Itajai@90 Florianopolis@11 Blumenau@83 Chapeco@545 Jaragua_do_Sul@183 Criciuma@180 Brusque@97 Balneario_Camboriu@80
+Chapeco: Joinville@516 Itajai@588 Florianopolis@676  Blumenau@555 Sao_Jose@545 Jaragua_do_Sul@488 Criciuma@529 Brusque@585 Balneario_Camboriu@594
+Jaragua_do_Sul: Joinville@46 Itajai@98 Florianopolis@186  Blumenau@64 Sao_Jose@183 Chapeco@488 Criciuma@358 Brusque@98 Balneario_Camboriu@107
+Criciuma: Joinville@350 Itajai@266 Florianopolis@191  Blumenau@316 Sao_Jose@180 Chapeco@529 Jaragua_do_Sul@358 Brusque@274 Balneario_Camboriu@258
+Brusque: Joinville@117 Itajai@37 Florianopolis@100  Blumenau@43 Sao_Jose@97 Chapeco@585 Jaragua_do_Sul@98 Criciuma@274 Balneario_Camboriu@45
+Balneario_Camboriu: Joinville@98 Itajai@10 Florianopolis@83  Blumenau@64 Sao_Jose@80 Chapeco@594 Jaragua_do_Sul@107 Criciuma@258 Brusque@45
