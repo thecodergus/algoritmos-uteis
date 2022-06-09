@@ -1,10 +1,10 @@
-fn splitline(string: String, splitter: &str) -> Vec<String> {
-	let itens: Vec<&str> = string.split(splitter).collect();
+fn splitline(string: String) -> Vec<String> {
+	let itens: Vec<&str> = string.split_whitespace().collect();
 
 	let mut result: Vec<String> = Vec::new();
 
 	for i in itens {
-		result.push(i.to_string().replace("\n", ""));
+		result.push(i.to_string());
 	}
 	
 	return result;
