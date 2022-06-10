@@ -1,7 +1,7 @@
 // Este algoritmo retorna uma lista de todos os numeros primos até limit
 
-fn sieve_of_atkin(limit: i128) -> Vec<i128> {
-    let mut numbers: Vec<i128> = Vec::new();
+fn sieve_of_atkin(limit: u128) -> Vec<u128> {
+    let mut numbers: Vec<u128> = Vec::new();
 
     if limit > 2 {
         numbers.push(2);
@@ -13,9 +13,9 @@ fn sieve_of_atkin(limit: i128) -> Vec<i128> {
 
     let mut sieve = vec![false; (limit + 1) as usize];
 
-    let mut x: i128 = 1;
-    let mut y: i128;
-    let mut n: i128;
+    let mut x: u128 = 1;
+    let mut y: u128;
+    let mut n: u128;
 
     while x.pow(2) <= limit {
         y = 1;
@@ -41,7 +41,7 @@ fn sieve_of_atkin(limit: i128) -> Vec<i128> {
         x += 1;
     }
 
-    let mut r: i128 = 5;
+    let mut r: u128 = 5;
     while r.pow(2) <= limit {
         if sieve[r as usize] {
             for i in (r.pow(2)..=limit).step_by(r.pow(2) as usize){
