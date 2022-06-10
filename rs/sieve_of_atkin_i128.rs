@@ -1,3 +1,5 @@
+// Este algoritmo retorna uma lista de todos os numeros primos até limit
+
 fn sieve_of_atkin(limit: i128) -> Vec<i128> {
     let mut numbers: Vec<i128> = Vec::new();
 
