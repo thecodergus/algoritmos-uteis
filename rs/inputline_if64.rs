@@ -17,5 +17,4 @@ fn string_to_f64(string: String) -> f64 {
 
 fn inputline_f64() -> f64 {
     return string_to_f64(inputline());
-            
 }
