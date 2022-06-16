@@ -1,28 +1,29 @@
 use std::collections::HashMap;
 
 // Structs
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
+struct Chave(String, String);
+
+#[derive(Clone)]
 struct Grafo {
 	grafo: grafo,
 	nodos: Vec<String>,
-	arestas: Vec<ligacao>
+	arestas: Vec<Chave>
 }
 
+#[derive(Clone)]
 struct Nodo {
 	de: String,
 	para: String,
 	valor: i64
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
-struct Chave(String, String);
-
 // Custom Types
-type ligacao = (String, String);
-type grafo = HashMap<ligacao, Nodo>;
+type grafo = HashMap<Chave, Nodo>;
+
 
 trait ProjetoNodo {
 	fn new(de: String, para: String, valor: i64) -> Nodo;
-	fn clone(&self) -> Nodo;
 }
 
 impl ProjetoNodo for Nodo {
@@ -33,20 +34,11 @@ impl ProjetoNodo for Nodo {
 			valor
 		}
 	}
-
-	fn clone(&self) -> Nodo {
-		Nodo {
-			de: self.de.clone(),
-			para: self.para.clone(),
-			valor: self.valor.clone()
-		}
-	}
 }
 
 trait ProjetoGrafo {
 	fn new() -> Grafo;
-	fn clone(&self) -> Grafo;
-	fn add_nodo_aresta(&mut self, chave: ligacao, valor: i64);
+	fn add_nodo_aresta(&mut self, chave: Chave, valor: i64);
 	fn add_nodo(&mut self, no: String);
 	fn remover_nodo(&mut self, no: String);
 	
@@ -57,8 +49,8 @@ trait ProjetoGrafo {
 	
 
 	// Aresta (ligação)
-	fn remove_aresta(&mut self, chave: ligacao);
-	fn verificar_se_existe_aresta(&self, aresta: &ligacao) -> bool;
+	fn remove_aresta(&mut self, chave: Chave);
+	fn verificar_se_existe_aresta(&self, aresta: &Chave) -> bool;
 	// fn add_aresta(ligacao: ligacao, valor: i64);
 	fn get_all_grafo(&self) -> Vec<Nodo>;
 	fn get_show_all_grafo(&self) -> Vec<String>;
@@ -74,24 +66,7 @@ impl ProjetoGrafo for Grafo {
 		}
 	}
 
-	fn clone(&self) -> Grafo {
-		let mut g: grafo = HashMap::new();
-
-		for (key, value) in &self.grafo {
-			g.insert(
-				(*key).clone(),
-				(*value).clone()
-			);
-		}
-		
-		Grafo {
-			grafo: g,
-			nodos: self.nodos.clone(),
-			arestas: self.arestas.clone()
-		}
-	}
-
-	fn add_nodo_aresta(&mut self, chave: ligacao, valor: i64) {
+	fn add_nodo_aresta(&mut self, chave: Chave, valor: i64) {
 		if !self.verificar_se_existe_nodo(&chave.0) {
 			self.add_nodo(chave.0.clone());
 		}
@@ -148,7 +123,7 @@ impl ProjetoGrafo for Grafo {
 		self.nodos.len() as u64
 	}
 
-	fn verificar_se_existe_aresta(&self, aresta: &ligacao) -> bool{
+	fn verificar_se_existe_aresta(&self, aresta: &Chave) -> bool{
 		self.arestas.contains(aresta)
 	}
 
@@ -156,7 +131,7 @@ impl ProjetoGrafo for Grafo {
 		self.arestas.len() as u64
 	}
 
-	fn remove_aresta(&mut self, chave: ligacao){
+	fn remove_aresta(&mut self, chave: Chave){
 		if self.verificar_se_existe_aresta(&chave) {
 			self.grafo.remove(&chave);
 	
@@ -169,9 +144,9 @@ impl ProjetoGrafo for Grafo {
 	// Falta remover os itens de self.arestas
 	fn remover_nodo(&mut self, no: String){
 		if self.verificar_se_existe_nodo(&no) {
-			let arestas: Vec<&ligacao> = self.arestas
+			let arestas: Vec<&Chave> = self.arestas
 									.iter()
-									.filter(|(x, y)| *x == no || *y == no)
+									.filter(|Chave(x, y)| *x == no || *y == no)
 									.collect();
 
 			for i in arestas {
@@ -187,7 +162,7 @@ impl ProjetoGrafo for Grafo {
 
 fn main() {
     let mut g: Grafo = Grafo::new();
-	let mut exemplo: Vec<ligacao> = Vec::new();
+	let mut exemplo: Vec<(String, String)> = Vec::new();
 
 	exemplo.push(
 		("1".to_string(), "2".to_string())
@@ -254,7 +229,7 @@ fn main() {
 
 
 	for i in exemplo {
-		g.add_nodo_aresta((i.0, i.1), 0);
+		g.add_nodo_aresta(Chave(i.0, i.1), 0);
 	}
 
 
@@ -263,6 +238,8 @@ fn main() {
 	for i in g.get_show_all_grafo() {
 		println!("{}", i);
 	}
+
+	let c: Chave = Chave("Eu".to_string(), "Testo".to_string());
 	
 }
 
