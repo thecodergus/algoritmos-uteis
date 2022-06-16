@@ -13,7 +13,8 @@ struct Nodo {
 	valor: i64
 }
 
-struct Ligacao(String, String);
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
+struct Chave(String, String);
 
 // Custom Types
 type ligacao = (String, String);
