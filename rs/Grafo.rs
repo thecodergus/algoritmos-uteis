@@ -1,27 +1,27 @@
 use std::collections::HashMap;
 
+// Custom Types
+type GrafoMap = HashMap<Chave, Nodo>;
+
 // Structs
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug)]
 struct Chave(String, String);
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct Grafo {
-	grafo: grafo,
+	grafo: GrafoMap,
 	nodos: Vec<String>,
 	arestas: Vec<Chave>
 }
 
-#[derive(Clone)]
+#[derive(Eq, PartialEq, Hash, Clone, Debug)]
 struct Nodo {
 	de: String,
 	para: String,
 	valor: i64
 }
 
-// Custom Types
-type grafo = HashMap<Chave, Nodo>;
-
-
+// Interfaces e implementação
 trait ProjetoNodo {
 	fn new(de: String, para: String, valor: i64) -> Nodo;
 }
@@ -239,7 +239,7 @@ fn main() {
 		println!("{}", i);
 	}
 
-	let c: Chave = Chave("Eu".to_string(), "Testo".to_string());
+	println!("{:?}", g.arestas);
 	
 }
 
