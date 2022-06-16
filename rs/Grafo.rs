@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-// Custom Types
+// Types
 type GrafoMap = HashMap<Chave, Nodo>;
 
 // Structs
@@ -49,7 +49,7 @@ trait ProjetoGrafo {
 	
 
 	// Aresta (ligação)
-	fn remove_aresta(&mut self, chave: Chave);
+	fn remover_aresta(&mut self, chave: Chave);
 	fn verificar_se_existe_aresta(&self, aresta: &Chave) -> bool;
 	// fn add_aresta(ligacao: ligacao, valor: i64);
 	fn get_all_grafo(&self) -> Vec<Nodo>;
@@ -131,7 +131,7 @@ impl ProjetoGrafo for Grafo {
 		self.arestas.len() as u64
 	}
 
-	fn remove_aresta(&mut self, chave: Chave){
+	fn remover_aresta(&mut self, chave: Chave){
 		if self.verificar_se_existe_aresta(&chave) {
 			self.grafo.remove(&chave);
 	
@@ -141,16 +141,16 @@ impl ProjetoGrafo for Grafo {
 		}
 	}
 
-	// Falta remover os itens de self.arestas
 	fn remover_nodo(&mut self, no: String){
 		if self.verificar_se_existe_nodo(&no) {
-			let arestas: Vec<&Chave> = self.arestas
+			let arestas: Vec<Chave> = self.arestas
 									.iter()
 									.filter(|Chave(x, y)| *x == no || *y == no)
-									.collect();
+									.cloned()
+									.collect::<Vec<Chave>>();
 
 			for i in arestas {
-				self.grafo.remove(i);
+				self.remover_aresta(i);
 			}
 
 			if let Some(index) = self.nodos.iter().position(|x| *x == no) {
@@ -240,6 +240,7 @@ fn main() {
 	}
 
 	println!("{:?}", g.arestas);
+	
 	
 }
 
