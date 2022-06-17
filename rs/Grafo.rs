@@ -38,6 +38,8 @@ impl ProjetoNodo for Nodo {
 
 trait ProjetoGrafo {
 	fn new() -> Grafo;
+	
+	// Nos / Vertice (elemento posicionado)
 	fn add_nodo_aresta(&mut self, chave: Chave, valor: i64);
 	fn add_nodo(&mut self, no: String);
 	fn remover_nodo(&mut self, no: String);
@@ -45,13 +47,13 @@ trait ProjetoGrafo {
 	fn verificar_se_existe_nodo(&self, no: &String) -> bool;
 	fn get_numero_nodos(&self) -> u64;
 
-	// Nos / Vertice (elemento posicionado)
+	
 	
 
 	// Aresta (ligação)
 	fn remover_aresta(&mut self, chave: Chave);
 	fn verificar_se_existe_aresta(&self, aresta: &Chave) -> bool;
-	// fn add_aresta(ligacao: ligacao, valor: i64);
+	// fn add_aresta(ligacao: Chave, valor: i64);
 	fn get_all_grafo(&self) -> Vec<Nodo>;
 	fn get_show_all_grafo(&self) -> Vec<String>;
 	fn get_numero_arestas(&self) -> u64;
@@ -159,6 +161,8 @@ impl ProjetoGrafo for Grafo {
 		}
 	}
 }
+
+
 
 fn main() {
     let mut g: Grafo = Grafo::new();
