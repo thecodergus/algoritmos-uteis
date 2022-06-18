@@ -11,8 +11,15 @@ fn problema(valor: u64) -> Vec<u64> {
 
 	return result;
 }
+#[cfg(test)]
+mod test {
+	use super::*;
 
-#[test]
-fn caso_1() {
-	assert_eq!(problema(8), Vec::from([1, 3, 5, 7]));
-}
+	#[test]
+	fn test() {
+		let p = problema(8);
+		let r = Vec::from([1, 3, 5, 7]);
+
+		assert_eq!(p, r);
+	}
+} 
