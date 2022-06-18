@@ -3,10 +3,11 @@ use std::{collections::HashMap};
 // Matriz de Vector usada ara construir o Grafo.
 type MatrizGrafo = Vec<Vec<isize>>;
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+
 
 // O dicionario serve para podermos dar entrada a qualquer String e ter como abstrair suas posições dentro.
 // da matriz numerica, isso serve apenas para fins de uso, não requerer transcrever um Nodo com X para valor numerico.
+#[derive(PartialEq, Eq, Clone, Debug)]
 struct Grafo {
 	matriz: MatrizGrafo,
 	dicionario: HashMap<String, usize>
