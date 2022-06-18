@@ -1,3 +1,12 @@
+/*
+	Autor: Gustavo Michels de Camargo
+
+	Projeto: Algoritmo estrural de um Grafo
+
+
+*/
+
+
 use std::{collections::HashMap};
 
 // Matriz de Vector usada ara construir o Grafo.
@@ -10,16 +19,19 @@ type MatrizGrafo = Vec<Vec<isize>>;
 #[derive(PartialEq, Eq, Clone, Debug)]
 struct Grafo {
 	matriz: MatrizGrafo,
-	dicionario: HashMap<String, usize>
+	dicionario: HashMap<String, usize>,
+	bicondicional: bool
 }
 
 trait Projeto {
 	// Geral
-	fn new(tamanho: usize) -> Grafo;
+	fn new(tamanho: usize, tipo: &str) -> Grafo;
+
+	// Funcçoes envolvendo o dicionario - Usuario
+	fn usr_pegar_indice(&self, chave: String) -> usize;
+	fn usr_pegar_chave(&self, indice: usize) -> String;
 
 	// Usuario
-	fn usr_pegar_indice(&self, a: String) -> usize;
-	fn usr_pegar_chave(&self, a: usize) -> String;
 	fn usr_adicionar_conexao(&mut self, a: String, b: String, valor: isize);
 	fn usr_remover_conexao(&mut self, a: String, b: String);
 	fn usr_numero_conexoes(&self, no: String) -> usize;
@@ -47,28 +59,32 @@ impl Projeto for Grafo {
 	// consultaro dicionario o tempo todo quando se apenas como Objetivo encontrar um menor caminho com Dijkstra por exemplo.
 	
 	// Apenas essa função foge a regra por ser universal
-	fn new(tamanho: usize) -> Grafo {
+	fn new(tamanho: usize, tipo: &str) -> Grafo {
 		Grafo {
 			matriz: vec![vec![-1; tamanho]; tamanho],
-			dicionario: HashMap::new()
+			dicionario: HashMap::new(),
+			bicondicional: match tipo  {
+				"->" => false, // Condicional
+				"<->" | _ => true // Bicondicional
+			}
 		}
 	}
 
 	// ---- Funções para uso direto do usuario ----
 
 	// Retorna o indice da matriz relacionada a chave
-	fn usr_pegar_indice(&self, a: String) -> usize {
-		if self.dicionario.contains_key(&a) {
-			return (&self.dicionario.get(&a)).unwrap().clone();
+	fn usr_pegar_indice(&self, chave: String) -> usize {
+		if self.dicionario.contains_key(&chave) {
+			return (&self.dicionario.get(&chave)).unwrap().clone();
 		}
 		
 		return 0;
 	}
 
 	// Retorna a chave do dicionario relacionada ao valor do indice da matriz do grafo
-	fn usr_pegar_chave(&self, a: usize) -> String {
+	fn usr_pegar_chave(&self, indice: usize) -> String {
 		for (key, value) in self.dicionario.iter() {
-			if *value == a {
+			if *value == indice {
 				return (*key).clone();
 			}
 		}
@@ -90,11 +106,12 @@ impl Projeto for Grafo {
 
 		let (valor_a, valor_b): (usize, usize) = (self.usr_pegar_indice(a), self.usr_pegar_indice(b));
 
-		// Se appenas essa linha estiver descomentada, o grafo possui sentido de direção, condicional, a -> b
 		self.matriz[valor_a][valor_b] = valor;
 
-		// Descomente a linha abaixo caso queira um grafo sem sentido de direção, bicondicional, a <-> b
-		// self.matriz[self.usr_pegar_indice(b)][self.usr_pegar_indice(a)] = valor;
+		if self.bicondicional {
+			self.matriz[valor_b][valor_a] = valor;
+		}
+		
 	}
 
 	fn usr_remover_conexao(&mut self, a: String, b: String) {
@@ -140,11 +157,11 @@ impl Projeto for Grafo {
 	// Esera usar esta função apenas para usos proprios dentro do Grafo, como em algoritmos tipo dijkstra
 	// Conecta Dois vertices
 	fn adicionar_conexao(&mut self, a: usize, b: usize, valor: isize) {
-		// Se appenas essa linha estiver descomentada, o grafo possui sentido de direção, condicional, a -> b
 		self.matriz[a][b] = valor;
 
-		// Descomente a linha abaixo caso queira um grafo sem sentido de direção, bicondicional, a <-> b
-		// self.matriz[self.usr_pegar_indice(b)][self.usr_pegar_indice(a)] = valor;
+		if self.bicondicional {
+			self.matriz[b][a] = valor;
+		}
 	}
 
 	fn remover_conexao(&mut self, a: usize, b: usize) {
@@ -181,19 +198,18 @@ impl Projeto for Grafo {
 
 }
 
+
+// Main
 fn main() {
 	// Grafo com no maximo mil vertices
-	let mut grafo: Grafo = Grafo::new(1000);
+	 // "->" =  Grafo condicional, "<->" = Grafo Bicondicional
+	let mut grafo: Grafo = Grafo::new(1000, "->");
 	
 	grafo.usr_adicionar_conexao(0.to_string(), 1.to_string(), 1);
 	grafo.usr_adicionar_conexao(1.to_string(), 2.to_string(), 1);
 	grafo.usr_adicionar_conexao(2.to_string(), 3.to_string(), 1);
 	grafo.usr_adicionar_conexao(3.to_string(), 0.to_string(), 1);
 
-	let chave: String = "10".to_string();
-	let c = grafo.usr_pegar_indice(chave);
-
-	println!("{}", c);
 	println!("{:?}", grafo.conexoes(2));
 }
 
@@ -203,13 +219,26 @@ mod test {
 	use super::*;
 
 	#[test]
-	fn numero_conexoes() {
-		let mut grafo: Grafo = Grafo::new(1000);
+	fn usr_numero_conexoes() {
+		let mut grafo: Grafo = Grafo::new(1000, "->");
 
 		for i in 1..1000 {
 			grafo.usr_adicionar_conexao(0.to_string(), i.to_string(), 1);
 		}
 
 		assert_eq!(grafo.usr_numero_conexoes(0.to_string()), 999);
+		assert_eq!(grafo.usr_numero_conexoes(0.to_string()), grafo.numero_conexoes(0));
+	}
+
+	#[test]
+	fn numero_conexoes() {
+		let mut grafo: Grafo = Grafo::new(1000, "<->");
+
+		for i in 1..1000 {
+			grafo.adicionar_conexao(0, i, 1);
+		}
+
+		assert_eq!(grafo.numero_conexoes(0), 999);
+		assert_eq!(grafo.numero_conexoes(0), grafo.usr_numero_conexoes(0.to_string()));
 	}
 } 
