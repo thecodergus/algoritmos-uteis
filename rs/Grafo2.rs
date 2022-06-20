@@ -7,13 +7,13 @@
 use std::{collections::HashMap};
 
 // Matriz de Vector usada ara construir o Grafo.
-type MatrizGrafo = Vec<Vec<isize>>;
+type MatrizGrafo = Vec<Vec<f64>>;
 
 
 
 // O dicionario serve para podermos dar entrada a qualquer String e ter como abstrair suas posições dentro.
 // da matriz numerica, isso serve apenas para fins de uso, não requerer transcrever um Nodo com X para valor numerico.
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 struct Grafo {
 	matriz: MatrizGrafo,
 	dicionario: HashMap<String, usize>,
@@ -29,14 +29,14 @@ trait Projeto {
 	fn usr_pegar_chave(&self, indice: usize) -> String;
 
 	// Usuario
-	fn usr_adicionar_conexao(&mut self, a: String, b: String, valor: isize);
+	fn usr_adicionar_conexao(&mut self, a: String, b: String, valor: f64);
 	fn usr_remover_conexao(&mut self, a: String, b: String);
 	fn usr_numero_conexoes(&self, no: String) -> usize;
 	fn usr_verificar_se_existe_conexao(&self, a: String, b: String) -> bool;
 	fn usr_conexoes(&self, a: String) -> Vec<String>;
 
 	// Maquina / uso para os Algoritmos
-	fn adicionar_conexao(&mut self, a: usize, b: usize, valor: isize);
+	fn adicionar_conexao(&mut self, a: usize, b: usize, valor: f64);
 	fn remover_conexao(&mut self, a: usize, b: usize);
 	fn numero_conexoes(&self, no: usize) -> usize;
 	fn verificar_se_existe_conexao(&self, a: usize, b: usize) -> bool;
@@ -58,7 +58,7 @@ impl Projeto for Grafo {
 	// Apenas essa função foge a regra por ser universal
 	fn new(tamanho: usize, tipo: &str) -> Grafo {
 		Grafo {
-			matriz: vec![vec![-1; tamanho]; tamanho],
+			matriz: vec![vec![-1.0; tamanho]; tamanho],
 			dicionario: HashMap::new(),
 			bicondicional: match tipo  {
 				"->" => false, // Condicional
@@ -90,7 +90,7 @@ impl Projeto for Grafo {
 	}
 	
 	// Conecta Dois vertices
-	fn usr_adicionar_conexao(&mut self, a: String, b: String, valor: isize) {
+	fn usr_adicionar_conexao(&mut self, a: String, b: String, valor: f64) {
 		if !self.dicionario.contains_key(&a){
 			let num: usize = self.dicionario.len();
 			self.dicionario.insert(a.to_owned(), num);
@@ -114,21 +114,22 @@ impl Projeto for Grafo {
 	fn usr_remover_conexao(&mut self, a: String, b: String) {
 		let (valor_a, valor_b): (usize, usize) = (self.usr_pegar_indice(a), self.usr_pegar_indice(b));
 
-		self.matriz[valor_a][valor_b]  = -1;
-		self.matriz[valor_b][valor_a]  = -1;
+		self.matriz[valor_a][valor_b]  = -1.0;
+		self.matriz[valor_b][valor_a]  = -1.0;
 	}
 
 	// Retorba o numero de vertices na qual ele se conecta
 	fn usr_numero_conexoes(&self, no: String) -> usize {
-		self.matriz[self.usr_pegar_indice(no)].iter()
-						.filter(|x| **x >= 0)
-						.collect::<Vec<&isize>>()
+		let indice: usize = self.usr_pegar_indice(no);
+		self.matriz[indice].iter()
+						.filter(|x| **x >= 0.0)
+						.collect::<Vec<&f64>>()
 						.len() as usize | 0
 	}
 
 	// Verifica se dois nos estão conectados
 	fn usr_verificar_se_existe_conexao(&self, a: String, b: String) -> bool {
-		self.matriz[self.usr_pegar_indice(a)][self.usr_pegar_indice(b)]  >= 0
+		self.matriz[self.usr_pegar_indice(a)][self.usr_pegar_indice(b)]  >= 0.0
 	}
 
 
@@ -137,7 +138,7 @@ impl Projeto for Grafo {
 		let a_value: usize = self.usr_pegar_indice(a);
 
 		for i in 0..self.matriz[a_value].len() {
-			if a_value != i && self.matriz[a_value][i] > -1 {
+			if a_value != i && self.matriz[a_value][i] > -1.0 {
 				result.push(self.usr_pegar_chave(i));
 			}
 		}
@@ -153,7 +154,7 @@ impl Projeto for Grafo {
 	// Retorna um array dos indice de todos os nos na qual o no 'a' se conecta
 	// Esera usar esta função apenas para usos proprios dentro do Grafo, como em algoritmos tipo dijkstra
 	// Conecta Dois vertices
-	fn adicionar_conexao(&mut self, a: usize, b: usize, valor: isize) {
+	fn adicionar_conexao(&mut self, a: usize, b: usize, valor: f64) {
 		self.matriz[a][b] = valor;
 
 		if self.bicondicional {
@@ -162,27 +163,27 @@ impl Projeto for Grafo {
 	}
 
 	fn remover_conexao(&mut self, a: usize, b: usize) {
-		self.matriz[a][b]  = -1;
-		self.matriz[b][a]  = -1;
+		self.matriz[a][b]  = -1.0;
+		self.matriz[b][a]  = -1.0;
 	}
 
 	// Retorba o numero de vertices na qual ele se conecta
 	fn numero_conexoes(&self, no: usize) -> usize {
 		self.matriz[no].iter()
-						.filter(|x| **x >= 0)
-						.collect::<Vec<&isize>>()
+						.filter(|x| **x >= 0.0)
+						.collect::<Vec<&f64>>()
 						.len() as usize | 0
 	}
 
 	fn verificar_se_existe_conexao(&self, a: usize, b: usize) -> bool {
-		self.matriz[a][b]  >= 0
+		self.matriz[a][b]  >= 0.0
 	}
 
 	fn conexoes(&self, a: usize) -> Vec<usize> {
 		let mut result: Vec<usize> = Vec::new();
 
 		for i in 0..self.matriz[a].len() {
-			if a != i && self.matriz[a][i] > -1 {
+			if a != i && self.matriz[a][i] > -1.0 {
 				result.push(i);
 			}
 		}
@@ -202,10 +203,10 @@ fn main() {
 	 // "->" =  Grafo condicional, "<->" = Grafo Bicondicional
 	let mut grafo: Grafo = Grafo::new(1000, "->");
 	
-	grafo.usr_adicionar_conexao(0.to_string(), 1.to_string(), 1);
-	grafo.usr_adicionar_conexao(1.to_string(), 2.to_string(), 1);
-	grafo.usr_adicionar_conexao(2.to_string(), 3.to_string(), 1);
-	grafo.usr_adicionar_conexao(3.to_string(), 0.to_string(), 1);
+	grafo.usr_adicionar_conexao(0.to_string(), 1.to_string(), 1.0);
+	grafo.usr_adicionar_conexao(1.to_string(), 2.to_string(), 1.0);
+	grafo.usr_adicionar_conexao(2.to_string(), 3.to_string(), 1.0);
+	grafo.usr_adicionar_conexao(3.to_string(), 0.to_string(), 1.0);
 
 	println!("{:?}", grafo.conexoes(2));
 }
