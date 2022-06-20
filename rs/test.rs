@@ -11,12 +11,14 @@ fn problema(valor: u64) -> Vec<u64> {
 
 	return result;
 }
+
+
 #[cfg(test)]
 mod test {
 	use super::*;
 
 	#[test]
-	fn test() {
+	fn test_1() {
 		let p = problema(8);
 		let r = Vec::from([1, 3, 5, 7]);
 
