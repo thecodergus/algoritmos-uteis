@@ -24,7 +24,7 @@ fn convert_vector_string_to_f64(vetor: Vec<String>) -> Vec<f64> {
 	let mut result: Vec<f64> = Vec::new();
 
 	for i in vetor {
-		result.push(i.to_string().parse::<f64>().unwrap());
+		result.push(i.to_string().trim().parse::<f64>().unwrap());
 	}
 
 	return result;
