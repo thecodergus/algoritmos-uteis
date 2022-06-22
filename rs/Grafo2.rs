@@ -41,6 +41,7 @@ trait Projeto {
 	fn numero_conexoes(&self, no: usize) -> usize;
 	fn verificar_se_existe_conexao(&self, a: usize, b: usize) -> bool;
 	fn conexoes(&self, a: usize) -> Vec<usize>;
+	conexao_menor_valor(&self, no: usize) -> usize;
 
 	// Algoritmos que atuam sobre Grafos
 }
@@ -188,6 +189,19 @@ impl Projeto for Grafo {
 			}
 		}
 		return result;
+	}
+
+	fn conexao_menor_valor(&self, no: usize) -> usize {
+		let mut conexoes: Vec<usize> = self.conexoes(no);
+		let mut menor_conexao: usize = conexoes.drain(0..1).collect::<Vec<usize>>()[0];
+		
+		for i in conexoes {
+			if self.matriz[no][i] < self.matriz[no][menor_conexao] {
+				menor_conexao = i.to_owned();
+			}
+		}
+
+		return menor_conexao;
 	}
 
 
