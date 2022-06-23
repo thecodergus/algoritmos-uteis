@@ -1,5 +1,5 @@
 fn validar_numero_primo_i64(n: i64) -> bool {
-	if n < 1 {
+	if n <= 1 {
 		return false;
 	}
 
