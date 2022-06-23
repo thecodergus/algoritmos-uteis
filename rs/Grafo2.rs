@@ -44,6 +44,9 @@ trait Projeto {
 	conexao_menor_valor(&self, no: usize) -> usize;
 
 	// Algoritmos que atuam sobre Grafos
+	fn verificar_ciclo(&self, comeco: usize) -> bool;
+	fn fleury(&self, comeco: usize) -> bool;
+	// fn dijkstra(&self, comeco: usize, fim: usize) -> Vec<usize>;
 }
 
 
@@ -206,7 +209,43 @@ impl Projeto for Grafo {
 
 
 	// ---- Funções dos algoritmos ----
+	fn verificar_ciclo(&self, comeco: usize) -> bool {
+		let (mut visitados, mut restantes): (Vec<usize>, Vec<usize>) =
+			(Vec::new(), Vec::from([comeco]));
 
+		while restantes.len() > 0 {
+			let atual: usize = restantes.pop().unwrap();
+			visitados.push(atual.to_owned());
+
+			for vizinho in self.conexoes(atual) {
+				if visitados.contains(&vizinho){
+					return true;
+				}else{
+					restantes.push(vizinho.to_owned());
+				}
+			}
+		}
+		return false;
+	}
+
+	fn fleury(&self, comeco: usize) -> bool {
+		if !self.verificar_ciclo(comeco) {
+			return false;
+		}
+
+		let mut contador: u32 = 0;
+		for folha in 0..(self.tamanho as usize) {
+			if self.numero_conexoes(folha) != 0 {
+				contador += 1;
+			}
+
+			if contador > 1 {
+				return false;
+			}
+		}
+
+		return true;		
+	}
 
 }
 
@@ -252,5 +291,33 @@ mod test {
 
 		assert_eq!(grafo.numero_conexoes(0), 999);
 		assert_eq!(grafo.numero_conexoes(0), grafo.usr_numero_conexoes(0.to_string()));
+	}
+
+	#[test]
+	fn grafo_ciclo(){
+		let mut grafo: Grafo = Grafo::new(10, "->");
+		grafo.bicondicional = false;
+
+		grafo
+			.adicionar_conexao(0, 1, 1.0)
+			.adicionar_conexao(1, 2, 1.0)
+			.adicionar_conexao(2, 3, 1.0)
+			.adicionar_conexao(3, 1, 1.0)
+			.adicionar_conexao(3, 4, 1.0)
+			.adicionar_conexao(4, 0, 1.0)
+			;
+
+		assert_eq!(grafo.verificar_ciclo(0), true);
+
+		grafo = Grafo::new(10, "->");
+
+		grafo
+			.adicionar_conexao(0, 1, 1.0)
+			.adicionar_conexao(1, 2, 1.0)
+			.adicionar_conexao(2, 3, 1.0)
+			.adicionar_conexao(2, 4, 1.0)
+			;
+
+		assert_eq!(grafo.verificar_ciclo(0), false);
 	}
 } 
