@@ -1,4 +1,6 @@
-fn inputline_vector_f64() -> Vec<f64> {
+type T = u64;
+
+fn inputline_vector_u64() -> Vec<T> {
 	let mut input_line = String::new();
 
 	std::io::stdin()
@@ -9,6 +11,6 @@ fn inputline_vector_f64() -> Vec<f64> {
 				.to_string()
 				.split_whitespace()
 				.into_iter()
-				.map(|x| x.trim().parse::<f64>().unwrap_or(0))
-				.collect::<Vec<f64>>();
+				.map(|x| x.trim().parse::<T>().unwrap_or(0))
+				.collect::<Vec<T>>();
 }

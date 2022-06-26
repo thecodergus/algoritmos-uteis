@@ -1,4 +1,6 @@
-fn inputline_i64() -> i64 {
+type T = i64;
+
+fn inputline_i64() -> T {
 	let mut input_line = String::new();
 
 	std::io::stdin()
@@ -7,6 +9,6 @@ fn inputline_i64() -> i64 {
 
 	return input_line.to_string()
 						.trim()
-						.parse::<i64>()
+						.parse::<T>()
 						.unwrap_or(0);
 }
