@@ -17,7 +17,8 @@ type MatrizGrafo = Vec<Vec<f64>>;
 struct Grafo {
 	matriz: MatrizGrafo,
 	dicionario: HashMap<String, usize>,
-	bicondicional: bool
+	bicondicional: bool,
+	tamanho: usize
 }
 
 trait Projeto {
@@ -63,6 +64,7 @@ impl Projeto for Grafo {
 	fn new(tamanho: usize, tipo: &str) -> Grafo {
 		Grafo {
 			matriz: vec![vec![-1.0; tamanho]; tamanho],
+			tamanho,
 			dicionario: HashMap::new(),
 			bicondicional: match tipo  {
 				"->" => false, // Condicional
