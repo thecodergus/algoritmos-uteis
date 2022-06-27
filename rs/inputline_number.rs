@@ -9,5 +9,5 @@ fn inputline() -> T {
 	return input_line.to_string()
 						.trim()
 						.parse::<T>()
-						.unwrap_or(0);
+						.unwrap_or(0 as T);
 }
