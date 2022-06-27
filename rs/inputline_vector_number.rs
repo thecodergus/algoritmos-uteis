@@ -10,6 +10,6 @@ fn inputline_vector() -> Vec<T> {
 				.to_string()
 				.split_whitespace()
 				.into_iter()
-				.map(|x| x.trim().parse::<T>().unwrap_or(0))
+				.map(|x| x.trim().parse::<T>().unwrap_or(0 as T))
 				.collect::<Vec<T>>();
 }
