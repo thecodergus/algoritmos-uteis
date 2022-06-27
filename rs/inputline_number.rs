@@ -1,6 +1,5 @@
 type T = i64;
-
-fn inputline_i64() -> T {
+fn inputline() -> T {
 	let mut input_line = String::new();
 
 	std::io::stdin()

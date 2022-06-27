@@ -1,6 +1,5 @@
 type T = u64;
-
-fn inputline_vector_u64() -> Vec<T> {
+fn inputline_vector() -> Vec<T> {
 	let mut input_line = String::new();
 
 	std::io::stdin()
