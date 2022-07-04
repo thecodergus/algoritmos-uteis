@@ -1,6 +1,6 @@
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug)]
 struct Pilha{
-	data: Vec<String>
+	data: std::collections::VecDeque<String>
 }
 
 impl Pilha {
