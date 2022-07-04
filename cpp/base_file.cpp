@@ -2,7 +2,7 @@
 
 #define F(x) for(int i = 0; i < x; i++)
 #define pb push_back
-#define Fe(x) for(auto i : x)
+#define Feach(x) for(auto i : x)
 
 using namespace std;
 
