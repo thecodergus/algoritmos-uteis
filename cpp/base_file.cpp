@@ -4,6 +4,8 @@
 #define F(x) for(int i = 0; i < x; i++)
 #define pb push_back
 #define Feach(x) for(auto i : x)
+#define ulli unsigned long long int
+#define uli unsigned long int
 
 using namespace std;
 
