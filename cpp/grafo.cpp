@@ -104,6 +104,28 @@ class Grafo{
 		return false;
 	}
 
+	vector<uint> bfs(uint inicio){
+		vector<uint> passados, restantes;
+		restantes.pb(inicio);
+
+		while(!restantes.empty()){
+			uint atual = restantes.front();
+			restantes.erase(restantes.begin());
+			passados.pb(atual);
+
+			set<uint> vizinhos = this->get_vizinhos_nodo(atual);
+
+			Feach(vizinhos){
+				if(find(restantes.begin(), restantes.end(), item) == restantes.end() && find(passados.begin(), passados.end(), item) == passados.end()){
+					restantes.pb(item);
+				}	
+			}
+				
+		}
+
+		return passados;
+	}
+
 	
 	
 };
