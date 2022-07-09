@@ -1,4 +1,4 @@
-TARGET=hello-world
+TARGET=main
 CC=g++
 DEBUG=-g
 OPT=-O0
@@ -7,15 +7,12 @@ PTHREAD=-pthread
 CCFLAGS=$(DEBUG) $(OPT) $(WARN) $(PTHREAD) -pipe
 LD=g++
 LDFLAGS=$(PTHREAD) -export-dynamic
-OBJS= main.o helloworld.o
+OBJS= main.o
 all: $(OBJS)
-	$(LD) -o $(TARGET) $(OBJS) $(LDFLAGS)
- 
-main.o: src/main.cpp
-	$(CC) -c $(CCFLAGS) src/main.cpp -o main.o
- 
-helloworld.o: src/helloworld.cpp
-	$(CC) -c $(CCFLAGS) src/helloworld.cpp  -o helloworld.o
- 
+        $(LD) -o $(TARGET) $(OBJS) $(LDFLAGS)
+
+main.o: ./main.cpp
+        $(CC) -c $(CCFLAGS) ./main.cpp -o main.o
+
 clean:
-	rm -f *.o
+        rm -f *.o
