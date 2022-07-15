@@ -12,9 +12,9 @@ grafo = [
     ((4, 3), 1)
     ]
 
-adjacentes :: Grafo -> Vertice -> [Vertice]
-adjacentes [] _ = []
-adjacentes (((a, b), _):c) v 
-                        | (a == v) = b : (adjacentes c v)
-                        | (b == v) = a : (adjacentes c v)
-                        | otherwise = adjacentes c v 
+adjacentes :: Vertice -> Grafo  -> [Vertice]
+adjacentes _ [] = []
+adjacentes v (((a, b), _):c) 
+                        | (a == v) = b : (adjacentes v c)
+                        | (b == v) = a : (adjacentes v c)
+                        | otherwise = adjacentes v c 
