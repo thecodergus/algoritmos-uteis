@@ -9,3 +9,14 @@ fat n
     | n < 0 = Nothing
     | otherwise = do
                     mult_maybe (Just n) (fat(n - 1))
+
+
+clean_fat :: Maybe Integer -> Integer
+clean_fat (Just a) = a
+clean_fat Nothing = 0
+
+main :: IO ()
+main = do
+    putStr "Numero para fatorar: "
+    num <- getLine
+    print $ clean_fat $ fat (read num :: Integer)
