@@ -52,35 +52,25 @@ vector<T> sieve_of_atkin(T limit){
 	if(limit > 2) numbers.push_back(2);
 	if(limit > 3) numbers.push_back(3);
 
-	bitset<1> sieve(limit + 1);
-
-	T x{1}, y{}, n{};
-
-	while((T)pow(x, 2) <= limit){
-		y = 1;
-		while((T)pow(y, 2) <= limit){
-			n = (4 * pow(x, 2)) + pow(y, 2);
-			if(n <= limit && (n % 12 == 1 || n % 12 == 5)) sieve[n] = true;
+	vector<char> sieve(limit + 1, '0');
 	
-			n = (3 * pow(x, 2)) + pow(y, 2);
-			if(n <= limit && n % 12 == 7) sieve[n] = true;
+	for(T x{1}; x * x <= limit; x++){
+		for(T y{1}; y * y <= limit; y++){
+			
+			T n = (4 * x * x) + (y * y);
+			if(n <= limit && (n % 12 == 1 || n % 12 == 5)) sieve[n] = '1';
 	
-			n = (3 * pow(x, 2)) - pow(y, 2);
-			if(x > y && n <= limit && n % 12 == 11) sieve[n] = true;
+			n = (3 * x * x) + (y * y);
+			if(n <= limit && n % 12 == 7) sieve[n] = '1';
 	
-			y++;
+			n = (3 * x * x) - (y * y);
+			if(x > y && n <= limit && n % 12 == 11) sieve[n] = '1';
 		}
-		x++;
 	}
 
-	T r{5};
+	for(T r{5}; r * r <= limit; r++) if(sieve[r] == '1') for(T i{r * r}; i <= limit; i += r * r) sieve[i] = '0';
 
-	while((T)pow(r, 2) <= limit){
-		if(sieve[r]) for(int i{(int)pow(r, 2)}; (T)i <= limit; i += (int)pow(r, 2)) sieve[i] = false;
-		r++;
-	}
-
-	for(int i{5}; (T)i <= limit; i++) if(sieve[i]) numbers.push_back(i);
+	for(int i{5}; (T)i <= limit; i++) if(sieve[i] == '1') numbers.push_back(i);
 	
 
 	return numbers;
