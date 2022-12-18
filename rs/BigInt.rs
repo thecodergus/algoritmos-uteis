@@ -1,6 +1,7 @@
 use std::fmt;
 use std::ops::{Add, Mul, Sub};
-use std::cmp::Ordering;
+use std::cmp::{Ord, Ordering, PartialOrd};
+
 
 struct BigInt {
     sign: i8,
