@@ -141,6 +141,33 @@ impl Mul for BigInt {
     }
 }
 
+impl PartialEq for BigInt {
+    fn eq(&self, other: &BigInt) -> bool {
+        self.cmp(other) == 0
+    }
+}
+
+impl PartialOrd for BigInt {
+    fn partial_cmp(&self, other: &BigInt) -> Option<Ordering> {
+        match self.cmp(other) {
+            0 => Some(Ordering::Equal),
+            1 => Some(Ordering::Greater),
+            -1 => Some(Ordering::Less),
+            _ => None,
+        }
+    }
+}
+
+impl Ord for BigInt {
+    fn cmp(&self, other: &BigInt) -> Ordering {
+        match self.partial_cmp(other) {
+            Some(ordering) => ordering,
+            None => panic!("comparison failed"),
+        }
+    }
+}
+
+
 
 
 fn main() {
