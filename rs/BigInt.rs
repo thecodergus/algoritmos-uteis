@@ -175,6 +175,30 @@ impl Ord for BigInt {
     }
 }
 
+impl Not for BigInt {
+    type Output = bool;
+
+    fn not(self) -> bool {
+        self.not()
+    }
+}
+
+impl And for BigInt {
+    type Output = bool;
+
+    fn and(self, other: BigInt) -> bool {
+        self.and(&other)
+    }
+}
+
+impl Or for BigInt {
+    type Output = bool;
+
+    fn or(self, other: BigInt) -> bool {
+        self.or(&other)
+    }
+}
+
 
 
 
