@@ -44,6 +44,14 @@ impl BigInt {
     fn abs(&self) -> BigInt {
         BigInt::new(1, self.digits.clone())
     }
+
+    fn and(&self, other: &BigInt) -> bool {
+        self.cmp(other) == 0
+    }
+
+    fn or(&self, other: &BigInt) -> bool {
+        self.cmp(other) != 0
+    }
 }
 
 impl fmt::Display for BigInt {
