@@ -9,7 +9,10 @@ impl Perceptron {
         }
     }
 
-    fn predict(self, inputs: Vec<f64>) -> f64 {
+    fn predict(self, inputs: Vec<f64>) -> Result<f64, &'static str> {
+        if self.wigths.len() != inputs.len() {
+            return Err("O comprimento dos pesos não corresponde ao comprimento das entradas");
+        }
         let summation: f64 = self
             .wigths
             .iter()
@@ -17,9 +20,9 @@ impl Perceptron {
             .map(|(w, x)| w * x)
             .sum();
 
-        return match summation > 0.0 {
+        return Ok(match summation > 0.0 {
             true => summation,
             false => 0.0,
-        };
+        });
     }
 }
