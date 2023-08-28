@@ -1,0 +1,32 @@
+Tendo como base o modelo abaixo descrito:
+
+"
+#### `tipo_de_retorno nome_da_funcao(parametros);`
+
+**Descrição**: Breve descrição do que a função faz.
+
+**Parâmetros**:
+
+- `parametro1`: Descrição do parâmetro 1.
+- `parametro2`: Descrição do parâmetro 2.
+- ...
+
+**Retorno**: Descrição do valor retornado, se aplicável.
+
+**Requisitos**:
+
+- Requisito 1.
+- Requisito 2.
+- ...
+
+**Detalhes de implementação**:
+
+1. Passo 1 da implementação.
+2. Passo 2 da implementação.
+3. ...
+"
+
+Escreva em um bloco de código markdown a documentação para as seguinte funções:  
+
+
+
