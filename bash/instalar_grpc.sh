@@ -13,10 +13,11 @@ sudo apt install -y cmake
 sudo apt install -y build-essential autoconf libtool pkg-config
 
 # Clona o repositório do gRPC na versão 1.57.0
-git clone --recurse-submodules -b v1.57.0 --depth 1 --shallow-submodules https://github.com/grpc/grpc
+wget https://github.com/grpc/grpc/archive/refs/tags/v1.57.0.tar.gz
+tar -xzvf grpc-1.57.0.tar.gz
 
 # Entra no diretório do gRPC
-cd grpc
+cd grpc-1.57.0
 
 # Cria um diretório para a construção com CMake
 mkdir -p cmake/build
