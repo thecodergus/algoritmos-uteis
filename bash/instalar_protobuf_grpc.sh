@@ -9,7 +9,7 @@ sudo apt install -y build-essential autoconf libtool pkg-config cmake
 
 # Instalar gRPC
 echo "Instalando gRPC..."
-git clone -b v1.57.0 https://github.com/grpc/grpc
+git clone -b v1.39.0 https://github.com/grpc/grpc
 cd grpc
 git submodule update --init
 mkdir -p cmake/build
@@ -18,7 +18,7 @@ cmake ../..
 make -j$(nproc)
 sudo make install
 cd ../../..
-rm -rf grpc
+sudo rm -rf grpc
 
 # Instalar Protobuf
 echo "Instalando Protobuf..."
@@ -31,6 +31,6 @@ cmake ../..
 make -j$(nproc)
 sudo make install
 cd ../../..
-rm -rf protobuf
+sudo rm -rf protobuf
 
 echo "Instalação completa."
