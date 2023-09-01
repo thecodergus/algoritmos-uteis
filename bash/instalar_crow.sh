@@ -19,7 +19,7 @@ mkdir build
 cd build
 
 # Configurar CMake
-cmake .. -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF
+cmake -GNinja -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF ..
 
 # Compilar e instalar
 ninja
