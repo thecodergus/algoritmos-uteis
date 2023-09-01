@@ -14,7 +14,7 @@ sudo apt install -y \
         libc++-dev
 
 # Clona o repositório do gRPC usando a tag de lançamento especificada
-git clone -b $RELEASE_TAG https://github.com/grpc/grpc
+git clone -b v$RELEASE_TAG https://github.com/grpc/grpc
 
 # Entra no diretório do projeto clonado
 cd grpc
