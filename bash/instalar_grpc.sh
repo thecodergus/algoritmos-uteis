@@ -27,13 +27,13 @@ mkdir -p cmake/build
 cd cmake/build
 
 # Configura o projeto usando o CMake
-cmake ../..
+cmake ../.. -GNinja -DCMAKE_BUILD_TYPE=Release
 
 # Compila o projeto
-make
+ninja
 
 # Instala o gRPC no sistema
-sudo make install
+sudo ninja install
 
 # Atualiza as configurações do linker do sistema
 sudo ldconfig
