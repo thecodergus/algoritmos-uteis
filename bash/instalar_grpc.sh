@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# Instale ninja primeiro
+
 # Define a versão do gRPC a ser clonada
 RELEASE_TAG="1.57.0"
 
