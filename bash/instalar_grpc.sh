@@ -1,42 +1,37 @@
 #! /bin/bash
 
-# Instale ninja primeiro
+#!/bin/bash
 
-# Define a versão do gRPC a ser clonada
-RELEASE_TAG="1.57.0"
+# Instalar dependências
+sudo apt update
+sudo apt install -y build-essential autoconf libtool pkg-config cmake
 
-# Instala as ferramentas necessárias para compilação e outras dependências
-sudo apt install -y \
-        cmake \
-        build-essential \
-        autoconf \
-        libtool \
-        pkg-config \
-        clang \
-        libc++-dev \
-        libre2-dev
-        
-# Clona o repositório do gRPC usando a tag de lançamento especificada
-git clone -b v$RELEASE_TAG https://github.com/grpc/grpc
+# Clonar o repositório gRPC
+git clone --recurse-submodules -b v1.57.0 https://github.com/grpc/grpc
 
-# Entra no diretório do projeto clonado
+# Entrar no diretório do gRPC
 cd grpc
 
-# Atualiza os submódulos do projeto
-git submodule update --init
-
-# Cria um diretório para a compilação e entra nele
+# Criar diretório de build
 mkdir -p cmake/build
-cd cmake/build
 
-# Configura o projeto usando o CMake
-cmake ../.. -GNinja -DCMAKE_BUILD_TYPE=Release
+# Entrar no diretório de build
+pushd cmake/build
 
-# Compila o projeto
-ninja
+# Configurar o CMake. Note que o prefixo de instalação foi definido como /usr/local
+cmake -DgRPC_INSTALL=ON \
+      -DgRPC_BUILD_TESTS=OFF \
+      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      ../..
 
-# Instala o gRPC no sistema
-sudo ninja install
+# Compilar
+make -j$(nproc)
+
+# Instalar
+sudo make install
+
+# Sair do diretório de build
+popd
 
 # Atualiza as configurações do linker do sistema
 sudo ldconfig
