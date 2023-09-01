@@ -19,11 +19,9 @@ mkdir build
 cd build
 
 # Configurar CMake
-cmake -GNinja -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF ..
+cmake .. -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF
 
 # Compilar e instalar
-ninja
-
-sudo ninja install
+sudo make install
 
 echo "Instalação do Crow e dependências concluída."
