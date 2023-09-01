@@ -1,5 +1,7 @@
 #! /bin/bash
 
+VERSAO="4.8.0"
+
 # Certifique-se de instalar o Ninja antes de executar este script
 
 # Atualiza o índice de pacotes do sistema
@@ -12,16 +14,23 @@ sudo apt install -y \
     tar \
     wget \
     gcc \
-    g++
+    g++ \
+    libjpeg62-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libv4l-dev\
+    libtbb-dev \
+    libpng-dev
 
 # Baixa o código-fonte do OpenCV versão 4.8.0 do repositório oficial
-wget https://github.com/opencv/opencv/archive/refs/tags/4.8.0.tar.gz
+wget https://github.com/opencv/opencv/archive/refs/tags/$VERSAO.tar.gz
 
 # Descompacta o arquivo tar.gz baixado
-tar -xvzf 4.8.0.tar.gz
+tar -xvzf $VERSAO.tar.gz
 
 # Entra no diretório descompactado
-cd opencv-4.8.0
+cd opencv-$VERSAO
 
 # Cria um diretório para a construção (compilação) do código
 mkdir build
@@ -31,7 +40,7 @@ cd build
 
 # Executa o CMake para configurar o projeto para compilação
 # Utiliza o gerador Ninja para compilação
-cmake -GNinja ..
+cmake -GNinja -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_V4L=ON -D INSTALL_C_EXAMPLES=ON -D INSTALL_PYTHON_EXAMPLES=ON -D BUILD_EXAMPLES=ON -D WITH_QT=ON -D WITH_OPENGL=ON ..
 
 # Compila o projeto usando Ninja
 ninja
