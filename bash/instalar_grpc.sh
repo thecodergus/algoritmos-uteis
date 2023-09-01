@@ -13,8 +13,9 @@ sudo apt install -y \
         libtool \
         pkg-config \
         clang \
-        libc++-dev
-
+        libc++-dev \
+        libre2-dev
+        
 # Clona o repositório do gRPC usando a tag de lançamento especificada
 git clone -b v$RELEASE_TAG https://github.com/grpc/grpc
 
