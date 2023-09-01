@@ -1,44 +1,39 @@
 #! /bin/bash
 
-# Define o diretório de instalação como /usr/local
-export MY_INSTALL_DIR=/usr/local
+# Define a versão do gRPC a ser clonada
+RELEASE_TAG="1.57.0"
 
-# Cria o diretório de instalação, se ele não existir
-mkdir -p $MY_INSTALL_DIR
+# Instala as ferramentas necessárias para compilação e outras dependências
+sudo apt install -y \
+        cmake \
+        build-essential \
+        autoconf \
+        libtool \
+        pkg-config \
+        clang \
+        libc++-dev
 
-# Instala o CMake
-sudo apt install -y cmake
+# Clona o repositório do gRPC usando a tag de lançamento especificada
+git clone -b $RELEASE_TAG https://github.com/grpc/grpc
 
-# Instala as ferramentas essenciais para compilação e outras dependências
-sudo apt install -y build-essential autoconf libtool pkg-config
+# Entra no diretório do projeto clonado
+cd grpc
 
-# Clona o repositório do gRPC na versão 1.57.0
-wget https://github.com/grpc/grpc/archive/refs/tags/v1.57.0.tar.gz
-tar -xzvf grpc-1.57.0.tar.gz
+# Atualiza os submódulos do projeto
+git submodule update --init
 
-# Entra no diretório do gRPC
-cd grpc-1.57.0
-
-# Cria um diretório para a construção com CMake
+# Cria um diretório para a compilação e entra nele
 mkdir -p cmake/build
+cd cmake/build
 
-# Entra no diretório de construção
-pushd cmake/build
+# Configura o projeto usando o CMake
+cmake ../..
 
-# Configura o CMake com as opções desejadas
-cmake -DgRPC_INSTALL=ON \
-      -DgRPC_BUILD_TESTS=OFF \
-      -DCMAKE_INSTALL_PREFIX=$MY_INSTALL_DIR \
-      ../..
+# Compila o projeto
+make
 
-# Compila o projeto usando 4 núcleos
-sudo make -j 4
-
-# Instala os arquivos compilados no diretório de instalação
+# Instala o gRPC no sistema
 sudo make install
 
-# Retorna ao diretório original
-popd
-
-# Atualizando lista de pacotes
+# Atualiza as configurações do linker do sistema
 sudo ldconfig
