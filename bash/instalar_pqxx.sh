@@ -34,3 +34,6 @@ make
 
 # Instala o projeto no sistema
 sudo make install
+
+# Atualizando lista de pacotes
+sudo ldconfig

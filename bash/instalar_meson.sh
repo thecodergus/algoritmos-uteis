@@ -17,3 +17,6 @@ cd meson-1.2.1
 
 # Instala o Meson usando o setup.py com Python3
 sudo python3 setup.py install
+
+# Atualizando lista de pacotes
+sudo ldconfig

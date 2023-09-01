@@ -39,3 +39,6 @@ sudo make install
 
 # Retorna ao diretório original
 popd
+
+# Atualizando lista de pacotes
+sudo ldconfig

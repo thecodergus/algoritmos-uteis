@@ -44,3 +44,6 @@ ninja
 
 # Instala o projeto no sistema
 sudo ninja install
+
+# Atualizando lista de pacotes
+sudo ldconfig

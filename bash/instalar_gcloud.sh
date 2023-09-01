@@ -17,3 +17,6 @@ sudo apt update
 
 # Instala o Google Cloud CLI
 sudo apt install -y google-cloud-cli
+
+# Atualizando lista de pacotes
+sudo ldconfig

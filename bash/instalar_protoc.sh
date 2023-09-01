@@ -17,3 +17,6 @@ sudo mv protoc/bin/protoc /usr/local/bin/
 
 # Move os arquivos de inclusão para o diretório /usr/local/include/
 sudo mv protoc/include/* /usr/local/include/
+
+# Atualizando lista de pacotes
+sudo ldconfig

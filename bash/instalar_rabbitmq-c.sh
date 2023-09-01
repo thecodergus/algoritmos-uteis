@@ -31,3 +31,6 @@ make
 
 # Instala a biblioteca rabbitmq-c no sistema
 sudo make install
+
+# Atualizando lista de pacotes
+sudo ldconfig

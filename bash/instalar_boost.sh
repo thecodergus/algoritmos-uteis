@@ -30,3 +30,6 @@ cmake ..
 
 # Compila e instala a biblioteca Boost no sistema
 sudo make install
+
+# Atualizando lista de pacotes
+sudo ldconfig

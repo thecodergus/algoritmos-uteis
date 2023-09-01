@@ -47,3 +47,6 @@ echo -e "$RED -> Criando grupo de usuarios docker $pkg $NO_COLOR"
 sudo  groupadd docker
 sudo  usermod -aG docker $USER
 newgrp docker
+
+# Atualizando lista de pacotes
+sudo ldconfig
