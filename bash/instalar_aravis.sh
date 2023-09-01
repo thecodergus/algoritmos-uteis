@@ -20,7 +20,8 @@ sudo apt install -y libxml2-dev \
                     libgstreamer-plugins-good1.0-dev \
                     libgirepository1.0-dev gettext \
                     jq \
-                    glibc-source
+                    glibc-source \
+                    libglib2.0-dev
 
 # Pega a última versão do projeto Aravis usando a API do GitHub
 LAST_ARAVIS_VERSION=$(curl --silent "https://api.github.com/repos/AravisProject/aravis/releases/latest" | jq -r .tag_name)
