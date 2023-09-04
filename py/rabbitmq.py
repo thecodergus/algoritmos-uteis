@@ -1,61 +1,57 @@
-import pika
-from dataclasses import dataclass, field
-from datetime import datetime
-import numpy as np
-import logging as log
-from functools import partial
-import msgpack as msg
-
-
-@dataclass
-class ImagensInferidas:
-    camera_origem: str
-    width: int
-    height: int
-    type_image: str
-    part_id: str
-    produto_id: str
-    encoder: float
-    data_hora: datetime
-    imagem_data: bytes
-    imagem_array: np.ndarray = field(init=False)
-
-    def __post_init__(self):
-        self.imagem_array = np.frombuffer(self.imagem_data, dtype=np.uint8).reshape(
-            (self.height, self.width)
-        )
-
+import pika, logging as log
+from typing import Optional, Callable
 
 class RabbitMQ:
-    def __init__(
-        self, host: str = "localhost", port: str | int = 15672, queue: str = "my_queue"
-    ) -> None:
+    def __init__(self, host: str, port: str | int, user: str, password: str, queue: str):
         self.host: str = host
         self.port: str | int = port
         self.queue: str = queue
-        self.connection: pika.BlockingConnection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=self.host, port=port, retry_delay=5)
-        )
-        self.channel: pika.BlockingChannel = self.connection.channel()
-        self.channel.queue_declare(queue=self.queue)
+        self.user: str = user
+        self.password: str = password
+        self.connection: Optional[pika.BlockingConnection] = None
+        self.channel: Optional[pika.channel.Channel] = None
+        self.__callback_function: Optional[Callable] = None
 
-    def __callback(
-        self, callback: callable, ch, method, properties, body: bytes
-    ) -> None:
+    def connect(self):
         try:
-            novo_dado = ImagensInferidas(*msg.unpackb(body))
-            callback(novo_dado)
+            credentials = pika.PlainCredentials(self.user, self.password)
+            self.connection = pika.BlockingConnection(
+                pika.ConnectionParameters(host=self.host, port=self.port, credentials=credentials)
+            )
+            self.channel = self.connection.channel()
+            self.channel.queue_declare(queue=self.queue)
+        except pika.exceptions.AMQPConnectionError:
+            log.error("Erro de conexão AMQP.")
+        except pika.exceptions.ChannelClosedByBroker:
+            log.error("O canal foi fechado pelo broker.")
+        except Exception as e:
+            log.error(f"Erro ao conectar: {e}")
+
+    def consume(self, callback: Callable):
+        self.__callback_function = callback
+        try:
+            self.channel.basic_consume(queue=self.queue, on_message_callback=self.__callback, auto_ack=False)
+            self.channel.start_consuming()
+        except pika.exceptions.ConsumerCancelled:
+            log.error("O consumidor foi cancelado.")
+        except Exception as e:
+            log.error(f"Erro ao consumir: {e}")
+
+    def __callback(self, ch, method, properties, body):
+        try:
+            self.__callback_function(body)
             ch.basic_ack(delivery_tag=method.delivery_tag)
         except Exception as e:
-            ch.basic_reject(delivery_tag=method.delivery_tag, requeue=True)
-            log.error(f"Erro ao processar mensagem: {e}")
+            log.error(f"Erro no callback: {e}")
+            ch.basic_nack(delivery_tag=method.delivery_tag)
 
-    def consume(self, callback: callable) -> None:
-        fn = partial(
-            self.__callback,
-            callback,
-        )
+    def close(self):
+        try:
+            self.connection.close()
+        except pika.exceptions.ConnectionClosedByBroker:
+            log.error("Conexão fechada pelo broker.")
+        except Exception as e:
+            log.error(f"Erro ao fechar a conexão: {e}")
 
-        self.channel.basic_consume(queue=self.queue, on_message_callback=fn)
-        log.info(" [*] Aguardando por mensagens. Para sair pressione CTRL+C")
-        self.channel.start_consuming()
+    def __del__(self) -> None:
+        self.close()
