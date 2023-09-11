@@ -11,3 +11,6 @@ make -j$(nproc)
 sudo make install
 cd ../../..
 sudo rm -rf protobuf
+
+# Atualizando lista de pacotes
+sudo ldconfig
