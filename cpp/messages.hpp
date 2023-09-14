@@ -13,6 +13,11 @@ const std::string RESET = "\033[0m";
 enum class Level { INFO, WARNING, ERROR };
 
 std::string color_message(const std::string &message, Level level);
+
+void info(const std::string &message);
+void warning(const std::string &message);
+void error(const std::string &message);
+
 }  // namespace messages
 
 
@@ -38,4 +43,9 @@ std::string color_message(const std::string &message, Level level) {
 
   return final_message;
 }
+
+void info(const std::string &message) { std::cout << color_message(message, Level::INFO) << std::endl; }
+void warning(const std::string &message) { std::cout << color_message(message, Level::WARNING) << std::endl; }
+void error(const std::string &message) { std::cout << color_message(message, Level::ERROR) << std::endl; }
+
 }  // namespace messages
