@@ -1,5 +1,7 @@
 #! /bin/bash
 
+## Protobuff e protoc são a mesma parada
+
 # Versão do protobuf
 VERSAO="24.2"
 
