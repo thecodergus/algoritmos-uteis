@@ -70,6 +70,10 @@ std::string color_message(const std::string &message, Level level) {
       // Se for uma mensagem de erro, colore de vermelho
       final_message = RED + "[ERROR] " + RESET + message;
       break;
+    case Level::SUCCESS:
+      // Se for uma mensagem de sucesso, colore de verde
+      final_message = GREEN + "[SUCCESS] " + RESET + message;
+      break;
   }
 
   // Retorna a mensagem colorida
