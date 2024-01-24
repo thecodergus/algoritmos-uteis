@@ -1,5 +1,6 @@
 import numpy as np, pygad
 
+# Modelo numerico
 def equation_func(ga_instance, solution, solution_idx):
     x = solution[0]
     equation_output = 2 * x + 5
