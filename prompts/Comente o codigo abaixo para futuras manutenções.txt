@@ -1,4 +1,4 @@
-Comente em portugues o codigo abaixo para futuras manutenções:
+Comente em portugues o codigo(Comente no codigo como comentario de codigo) abaixo para futuras manutenções:
 
 
 
