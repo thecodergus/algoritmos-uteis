@@ -1,4 +1,4 @@
-Comente em portugues o codigo(Comente no codigo como comentario de codigo) abaixo para futuras manutenções:
+Comente em portugues o codigo(Comente no codigo como comentario de codigo, sem cortar ou excluir qualquer parte do codigo) abaixo para futuras manutenções:
 
 
 
