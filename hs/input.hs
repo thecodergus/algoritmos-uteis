@@ -1,12 +1,6 @@
-import System.Environment
-import Control.Monad
-
-main :: IO ()
-main = do
- args <- getArgs
- let linesToRead = if length args > 0
-                   then read (head args)
-                   else 0 :: Int
- numbers <- replicateM linesToRead getLine
- let ints = map read numbers :: [Int]
- print (sum ints)
+input :: Int -> IO [String]
+input 0 = return []
+input n = do
+    x <- getLine
+    xs <- input (n-1)
+    return (x:xs)
