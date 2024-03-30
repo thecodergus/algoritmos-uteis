@@ -1,11 +1,13 @@
-#include <cmath>
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <queue>
-#include <set>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
+
+#define INFINITY 9e8
 
 class Vertice {
  public:
@@ -17,7 +19,7 @@ class Vertice {
 std::vector<std::string> dijsktra(std::unordered_map<std::string, std::shared_ptr<Vertice>>& vertices, const std::string& inicio,
                                   const std::string& fim) {
   std::vector<std::string> caminho;
-  std::set<std::string> visitados;
+  std::unordered_set<std::string> visitados;
   std::unordered_map<std::string, std::string> anteriores;
   std::unordered_map<std::string, int> distancias;
   std::priority_queue<std::pair<int, std::string>> fila;
@@ -59,6 +61,8 @@ std::vector<std::string> dijsktra(std::unordered_map<std::string, std::shared_pt
     atual = anteriores[atual];
   }
   caminho.push_back(inicio);
+
+  std::reverse(caminho.begin(), caminho.end());
 
   return caminho;
 }
