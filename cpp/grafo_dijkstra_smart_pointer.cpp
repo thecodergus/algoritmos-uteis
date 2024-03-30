@@ -67,6 +67,35 @@ std::vector<std::string> dijsktra(std::unordered_map<std::string, std::shared_pt
   return caminho;
 }
 
+int bfs(const std::unordered_map<std::string, std::shared_ptr<Vertice>>& vertices, const std::string& inicio, const std::string& fim) {
+  std::unordered_set<std::string> visitados;
+  std::queue<std::pair<std::string, int>> fila;
+  fila.push({inicio, 0});
+
+  while (!fila.empty()) {
+    auto [nome, distancia] = fila.front();
+    fila.pop();
+
+    if (visitados.find(nome) != visitados.end()) {
+      continue;
+    }
+
+    visitados.insert(nome);
+
+    if (nome == fim) {
+      return distancia;
+    }
+
+    for (const auto& vizinho : vertices.at(nome)->vizinhos) {
+      if (visitados.find(vizinho->nome) == visitados.end()) {
+        fila.push({vizinho->nome, distancia + 1});
+      }
+    }
+  }
+
+  return -1;
+}
+
 int main() {
   int pontos{}, ligacoes{};
   std::unordered_map<std::string, std::shared_ptr<Vertice>> vertices;
@@ -87,11 +116,13 @@ int main() {
     vertices[nome2]->vizinhos.push_back(vertices[nome1]);
   }
 
-  auto caminho_ate_queijo = dijsktra(vertices, "Entrada", "*");
+  //   auto caminho_ate_queijo = dijsktra(vertices, "Entrada", "*");
 
-  auto caminho_ate_saida = dijsktra(vertices, "*", "Saida");
+  //   auto caminho_ate_saida = dijsktra(vertices, "*", "Saida");
 
-  std::cout << caminho_ate_queijo.size() - 1 + caminho_ate_saida.size() - 1 << std::endl;
+  //   std::cout << caminho_ate_queijo.size() - 1 + caminho_ate_saida.size() - 1 << std::endl;
+
+  std::cout << bfs(vertices, "Entrada", "*") + bfs(vertices, "*", "Saida") << std::endl;
 
   return 0;
 }
