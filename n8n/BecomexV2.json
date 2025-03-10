@@ -1,0 +1,526 @@
+{
+    "name": "Becomex v2",
+    "nodes": [
+      {
+        "parameters": {
+          "options": {}
+        },
+        "id": "4bbb620c-21ee-410a-b093-aff363bf0072",
+        "name": "When chat message received",
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "position": [
+          380,
+          240
+        ],
+        "webhookId": "8a41c272-9280-475c-9276-c1158c52f500",
+        "typeVersion": 1.1
+      },
+      {
+        "parameters": {
+          "model": "qwen2.5:32b",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+        "typeVersion": 1,
+        "position": [
+          460,
+          480
+        ],
+        "id": "2f907d92-673a-40b4-a51b-71a1f25d9efb",
+        "name": "Ollama Chat Model",
+        "credentials": {
+          "ollamaApi": {
+            "id": "evPFwx9s5xGzakLP",
+            "name": "Ollama account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {
+            "systemMessage": "=You are **Becomex's Data Analysis Specialist**, assisting Mathias, Gustavo, and Glauco with data-driven decision-making. Deliver **polite, technically precise responses** while highlighting critical patterns, anomalies, and actionable insights.  \n\n### Core Objectives:  \n1. **Technical Rigor**:  \n   - Validate data sources, metrics, and calculations **before** analysis.  \n   - Flag inconsistencies (e.g., `Note: Q2 sales outliers may skew averages`).  \n\n2. **Insight-Driven Output**:  \n   - Structure responses as:  \n     - **Summary**: Key findings (1-2 sentences).  \n     - **Caveats**: Data limitations or assumptions (e.g., `Caution: Missing data for 2023-Q4`).  \n     - **Recommendations**: Actionable next steps (e.g., `Suggest A/B testing for regional pricing`).  \n\n3. **User Adaptation**:  \n   - Adjust depth of technical jargon based on the requester’s role (e.g., simplify for non-technical stakeholders).  \n\n4. **Error Handling**:  \n   - Reject ambiguous requests with **contextual guidance** (e.g., `Could you clarify the time frame? Current data covers 2020-2023`). ",
+            "maxIterations": 100
+          }
+        },
+        "id": "c794909c-303b-4dab-9e0e-da2aeb652f3d",
+        "name": "Agente principal",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "position": [
+          640,
+          240
+        ],
+        "typeVersion": 1.6
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.prompt }}",
+          "options": {
+            "systemMessage": "=You are a **PostgreSQL Execution Engine**, designed to **generate, validate, and execute SQL queries** with end-to-end precision.  \n\n### Core Rules:  \n1. **Output Workflow**:  \n   - **If generating a query**: Return ONLY the raw, single-line SQL (e.g., `SELECT email FROM public.users WHERE active=true`).  \n   - **If executing a query**: Return results in **compact JSON format** (e.g., `{\"results\": [{\"column1\": value1}, ...], \"row_count\": N}`).  \n\n2. **Tools**:  \n   - `Get DB Schema and Tables List`: Resolve schema/table ambiguities.  \n   - `Get Table Definition`: Validate columns/data types pre-execution.  \n   - `Execute Query`:  \n     - Run the SQL against PostgreSQL and return raw results.  \n     - **Safety**: Reject destructive operations (e.g., `DROP`, `TRUNCATE`) without explicit approval.  \n     - **Limits**: Automatically add `LIMIT 1000` to `SELECT` queries unless specified otherwise.  \n\n3. **Error Handling**:  \n   - Validation errors: `/* ERROR: Column 'phone' not found in table 'public.users' */`.  \n   - Execution errors: Return PostgreSQL’s native error (e.g., `/* ERROR: division by zero */`).  \n\n4. **Edge Cases**:  \n   - If the user provides a query, execute it **only after validation** (e.g., fix formatting, add missing semicolons).  \n   - Never expose sensitive data (e.g., credit cards, passwords) – mask with `***` if detected.  \n\n5. **SQL Struct**\n'''sql\nCREATE TABLE origem_dados(\n    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,\n    ano NUMERIC(100, 0),\n    empresa TEXT\n);\n\n-- Tabela speed_fiscal\nCREATE TABLE speed_fiscal (\n    id_dado UUID REFERENCES origem_dados(id) ON DELETE CASCADE,\n    CFOP NUMERIC,\n    DESCR_COMPL TEXT,\n    NOME_FORNECEDOR TEXT,\n    VL_ITEM float8\n);\n\n-- Tabela impo_dis\nCREATE TABLE impo_dis (\n    id_dado UUID REFERENCES origem_dados(id) ON DELETE CASCADE,\n    NUM_DI NUMERIC,\n    DES_URF_ENTR_CARGA TEXT\n);\n\n-- Tabela impo_mercadorias\nCREATE TABLE impo_mercadorias (\n    id_dado UUID REFERENCES origem_dados(id) ON DELETE CASCADE,\n    NUM_DI NUMERIC,\n    QTD_COMERC float8,\n    VAL_UNIT_COND_VEND float8,\n    DES_MERCADORIA TEXT\n);\n\n-- Tabela impo_adicoes\nCREATE TABLE impo_adicoes (\n    id_dado UUID REFERENCES origem_dados(id) ON DELETE CASCADE,\n    NUM_DI NUMERIC,  \n    NOM_FORN_ESTR TEXT,\n    VAL_MERC_COND_VEND float8,\n    VAL_MERC_VEND_MN float8,\n    COD_PAIS_ORIG_MERC TEXT,\n    NOM_REGIME_TRIB TEXT,\n    FUND_LEGAL_REGIME TEXT\n);\n\n-- Tabela speed_contribuicoes\nCREATE TABLE speed_contribuicoes (\n    id_dado UUID REFERENCES origem_dados(id) ON DELETE CASCADE,\n    CFOP NUMERIC,\n    NOME_CLIENTE TEXT,\n    DESCR_COMPL TEXT,\n    VL_ITEM float8\n);\n'''",
+            "maxIterations": 100,
+            "returnIntermediateSteps": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.7,
+        "position": [
+          420,
+          680
+        ],
+        "id": "44eb94cd-1ad8-451e-8c86-cdfc199cd1a7",
+        "name": "Agente Postgress"
+      },
+      {
+        "parameters": {
+          "name": "Banco_Dados",
+          "description": "### **Tool: Database Interaction Gateway**  \n**Purpose**:  \nServe as the *secure interface* between user requests and PostgreSQL operations. Use this tool for **all database interactions**, including CRUD operations, schema validation, and query execution.  \n\n**When to Use**:  \n- Generating or executing SQL queries.  \n- Validating schemas/tables/columns.  \n- Fetching, updating, or analyzing data.  ",
+          "workflowId": {
+            "__rl": true,
+            "value": "dkGW19RR5ArMnlf2",
+            "mode": "id"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "prompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('prompt', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "prompt"
+            ],
+            "schema": [
+              {
+                "id": "prompt",
+                "displayName": "prompt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2,
+        "position": [
+          920,
+          480
+        ],
+        "id": "4d916d5a-4d85-470f-929d-6a98327d28b4",
+        "name": "Call n8n Workflow Tool"
+      },
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "prompt"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          120,
+          680
+        ],
+        "id": "9f1ee762-9a9a-46ca-8cce-81d7d7beb605",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "Get taable definition to find all columns and types",
+          "operation": "executeQuery",
+          "query": "SELECT \n    c.column_name,\n    c.data_type,\n    c.is_nullable,\n    c.column_default,\n    tc.constraint_type,\n    ccu.table_name AS referenced_table,\n    ccu.column_name AS referenced_column\nFROM \n    information_schema.columns c\nLEFT JOIN \n    information_schema.key_column_usage kcu \n    ON c.table_name = kcu.table_name \n    AND c.column_name = kcu.column_name\nLEFT JOIN \n    information_schema.table_constraints tc \n    ON kcu.constraint_name = tc.constraint_name\n    AND tc.constraint_type = 'FOREIGN KEY'\nLEFT JOIN\n    information_schema.constraint_column_usage ccu\n    ON tc.constraint_name = ccu.constraint_name\nWHERE \n    c.table_name = '{{ $fromAI(\"table_name\") }}' -- Your table name\n    AND c.table_schema = 'public' -- Ensure it's in the right schema\nORDER BY \n    c.ordinal_position;",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgresTool",
+        "typeVersion": 2.5,
+        "position": [
+          480,
+          1040
+        ],
+        "id": "cf3a93a1-a9b8-4965-91b3-363ed8273252",
+        "name": "Get table definition",
+        "credentials": {
+          "postgres": {
+            "id": "pwYfIdPEtDdUXTWP",
+            "name": "Postgres n8n"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "Get listof all tabls in database",
+          "operation": "executeQuery",
+          "query": "SELECT table_schema, table_name\nFROM information_schema.tables\nWHERE table_type = 'BASE TABLE' AND table_schema = 'public';",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgresTool",
+        "typeVersion": 2.5,
+        "position": [
+          320,
+          1000
+        ],
+        "id": "a2366658-579d-4741-ac07-95a6b45f5622",
+        "name": "DB Schema",
+        "credentials": {
+          "postgres": {
+            "id": "pwYfIdPEtDdUXTWP",
+            "name": "Postgres n8n"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": "qwq:latest",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+        "typeVersion": 1,
+        "position": [
+          260,
+          860
+        ],
+        "id": "7b3dcb16-898b-4145-a1e0-1348157871e4",
+        "name": "Ollama Chat Model1",
+        "credentials": {
+          "ollamaApi": {
+            "id": "evPFwx9s5xGzakLP",
+            "name": "Ollama account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "contextWindowLength": 100
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          680,
+          480
+        ],
+        "id": "e9580fd0-e440-4f95-aa71-0de9a606d952",
+        "name": "Window Buffer Memory"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "{{ $json.output.query }}",
+          "options": {
+            "replaceEmptyStrings": true
+          }
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          1140,
+          680
+        ],
+        "id": "225438ce-7b46-4d2b-a016-b8e9bf8d2a23",
+        "name": "Postgres",
+        "alwaysOutputData": true,
+        "executeOnce": true,
+        "credentials": {
+          "postgres": {
+            "id": "pwYfIdPEtDdUXTWP",
+            "name": "Postgres n8n"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Extract the SQL query from the text provided in {{$json.output}}. The SQL query may be contained within markdown code blocks (delimited by triple backticks ```, with or without an sql label) or presented as plain text. If the query is inside a markdown code block, extract only the content within the block. If no code block exists, treat the entire text as the SQL query. After extraction, remove all unnecessary line breaks and whitespace (e.g., extra spaces or line breaks around the query) to condense it into a single line. The final output must be a valid, executable PostgreSQL statement, preserving all required SQL syntax while eliminating internal line breaks.",
+          "hasOutputParser": true
+        },
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.5,
+        "position": [
+          760,
+          680
+        ],
+        "id": "7c195460-f894-4c30-a142-8d5cfde40cfd",
+        "name": "Basic LLM Chain"
+      },
+      {
+        "parameters": {
+          "model": "qwen2.5-coder:32b",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmOllama",
+        "typeVersion": 1,
+        "position": [
+          660,
+          980
+        ],
+        "id": "0eb50300-f73a-4531-87cf-8d18a3f610ad",
+        "name": "Ollama Model",
+        "credentials": {
+          "ollamaApi": {
+            "id": "evPFwx9s5xGzakLP",
+            "name": "Ollama account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "aggregate": "aggregateAllItemData",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.aggregate",
+        "typeVersion": 1,
+        "position": [
+          1360,
+          680
+        ],
+        "id": "b0616140-f8d1-40d2-92f0-47fae37304a2",
+        "name": "Aggregate"
+      },
+      {
+        "parameters": {
+          "options": {
+            "prompt": "VALIDATION FAILED  \n---------------  \n**Instructions**:  \n{instructions}  \n\n**Invalid Completion**:  \n{completion}  \n\n**Errors**:  \n{error}  \n\n**Correction Required**:  \nReturn **ONLY THE RAW SQL QUERY** with:  \n- No Markdown/backticks  \n- No explanations  \n- No placeholders (e.g., `{schema}`)  \n- Single-line formatting  \n- Explicit schema/table names  \n\n**Example Valid Output**:  \n`SELECT email FROM public.users WHERE active = true;`  \n\n**Try Again**:  "
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+        "typeVersion": 1,
+        "position": [
+          860,
+          900
+        ],
+        "id": "46649c58-f9c0-4a7f-a86d-ed9bf1fd3387",
+        "name": "Auto-fixing Output Parser"
+      },
+      {
+        "parameters": {
+          "model": "qwen2.5-coder:32b",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmOllama",
+        "typeVersion": 1,
+        "position": [
+          820,
+          1100
+        ],
+        "id": "95665f94-032e-4e0d-8906-93fa0b9b6f21",
+        "name": "Ollama Model1",
+        "credentials": {
+          "ollamaApi": {
+            "id": "evPFwx9s5xGzakLP",
+            "name": "Ollama account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n\t\"query\": \"SELECT * FROM speed_fiscal\"\n}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.2,
+        "position": [
+          1000,
+          1120
+        ],
+        "id": "deaa64e7-492f-4c6f-b1b6-0378c91b69f9",
+        "name": "Structured Output Parser"
+      }
+    ],
+    "pinData": {
+      "When Executed by Another Workflow": [
+        {
+          "json": {
+            "prompt": "Selecione os 10 primeiros itens da seguinte pesquisa: quero NOME_FORNECEDOR agregado a soma de VL_ITEM em ordem decrescente da tabela speed_fiscal"
+          }
+        }
+      ]
+    },
+    "connections": {
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "Agente principal",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Ollama Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Agente principal",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Agente Postgress": {
+        "main": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Call n8n Workflow Tool": {
+        "ai_tool": [
+          [
+            {
+              "node": "Agente principal",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Agente Postgress",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get table definition": {
+        "ai_tool": [
+          [
+            {
+              "node": "Agente Postgress",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DB Schema": {
+        "ai_tool": [
+          [
+            {
+              "node": "Agente Postgress",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Ollama Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Agente Postgress",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Window Buffer Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "Agente principal",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Basic LLM Chain": {
+        "main": [
+          [
+            {
+              "node": "Postgres",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Ollama Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres": {
+        "main": [
+          [
+            {
+              "node": "Aggregate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Auto-fixing Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Ollama Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Auto-fixing Output Parser",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Auto-fixing Output Parser",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1",
+      "timezone": "America/Sao_Paulo",
+      "callerPolicy": "workflowsFromSameOwner"
+    },
+    "versionId": "34faaecc-e875-4dd4-9ac5-176f5af1b8ce",
+    "meta": {
+      "templateId": "1954",
+      "templateCredsSetupCompleted": true,
+      "instanceId": "7058d058bf6734b5e3cf3023c4b7af9cd36ebd94528f7cb56e5a49d443d5634e"
+    },
+    "id": "dkGW19RR5ArMnlf2",
+    "tags": []
+  }
